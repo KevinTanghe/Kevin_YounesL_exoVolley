@@ -20,10 +20,15 @@ class CreatePlayersTable extends Migration
             $table->string('age');
             $table->string('phone');
             $table->string('mail');
-            $table->string('gender');
-            $table->string('contry');
+            $table->string('country');
+            $table->unsignedBigInteger('photo_id');
+            $table->foreign('photo_id')->references('id')->on('photos')->onDelete('cascade');
             $table->unsignedBigInteger('gender_id');
-            $table->
+            $table->foreign('gender_id')->references('id')->on('genders')->onDelete('cascade');
+            $table->unsignedBigInteger('role_id');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->unsignedBigInteger('team_id');
+            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
             $table->timestamps();
         });
     }

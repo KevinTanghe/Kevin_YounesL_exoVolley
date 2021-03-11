@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Player;
 use App\Models\Team;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,7 @@ class TeamController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages/addTeam');
     }
 
     /**
@@ -35,7 +36,21 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validation = $request->validate([
+            'nom' => 'required',
+            'city' => 'required',
+            'country' => 'required',
+            'numberMax' => 'required'
+        ]);
+
+        $store = new Team;
+        $store->nom = $request->nom;
+        $store->city = $request->city;
+        $store->country = $request->country;
+        $store->numberMax = $request->numberMax;
+        $store->save();
+        
+        return redirect('/');
     }
 
     /**
@@ -44,9 +59,12 @@ class TeamController extends Controller
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function show(Team $team)
+    public function show($id)
     {
-        //
+        $show = Team::find($id);
+        $player = Player::where('equipe_id', $id)->get();
+
+        return view('pages/show/showTeam', compact('show', 'player'));
     }
 
     /**
@@ -55,9 +73,11 @@ class TeamController extends Controller
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function edit(Team $team)
+    public function edit($id)
     {
-        //
+        $edit = Team::find($id);
+        
+        return view('pages/edit/editTeam');
     }
 
     /**
@@ -67,9 +87,23 @@ class TeamController extends Controller
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Team $team)
+    public function update(Request $request, $id)
     {
-        //
+        $validation = $request->validate([
+            'nom' => 'required',
+            'city' => 'required',
+            'country' => 'required',
+            'numberMax' => 'required'
+        ]);
+
+        $update = Team::find($id);
+        $update->nom = $request->nom;
+        $update->city = $request->city;
+        $update->country = $request->country;
+        $update->numberMax = $request->numberMax;
+        $update->save();
+        
+        return redirect('/pages/show/showTeam/'.$update->id);
     }
 
     /**
@@ -78,8 +112,10 @@ class TeamController extends Controller
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Team $team)
+    public function destroy($id)
     {
-        //
+        $destroy = Team::find($id);
+        $destroy->delete;
+        return redirect('/');
     }
 }
