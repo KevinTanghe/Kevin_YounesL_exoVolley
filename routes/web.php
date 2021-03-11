@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\TeamController;
+use App\Models\Team;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +17,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+
+    $team = Team::all();
+
+    return view('welcome', compact('team'));
 });
 
 
 Route::resource('team', TeamController::class);
-Route::resource('team', TeamController::class);
+Route::resource('player', PlayerController::class);

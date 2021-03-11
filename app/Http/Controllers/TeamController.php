@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Player;
+use App\Models\Role;
 use App\Models\Team;
 use Illuminate\Http\Request;
 
@@ -62,9 +63,10 @@ class TeamController extends Controller
     public function show($id)
     {
         $show = Team::find($id);
-        $player = Player::where('equipe_id', $id)->get();
-
-        return view('pages/show/showTeam', compact('show', 'player'));
+        $player = Player::all();
+        $role = Role::all();
+        
+        return view('pages/show/showTeam', compact('show', 'player', 'role'));
     }
 
     /**
@@ -77,7 +79,7 @@ class TeamController extends Controller
     {
         $edit = Team::find($id);
         
-        return view('pages/edit/editTeam');
+        return view('pages/edit/editTeam', compact('edit'));
     }
 
     /**
@@ -103,7 +105,7 @@ class TeamController extends Controller
         $update->numberMax = $request->numberMax;
         $update->save();
         
-        return redirect('/pages/show/showTeam/'.$update->id);
+        return redirect('/');
     }
 
     /**
@@ -115,7 +117,7 @@ class TeamController extends Controller
     public function destroy($id)
     {
         $destroy = Team::find($id);
-        $destroy->delete;
+        $destroy->delete();
         return redirect('/');
     }
 }

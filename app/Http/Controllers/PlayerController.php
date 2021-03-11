@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gender;
 use App\Models\Photo;
 use App\Models\Player;
+use App\Models\Role;
+use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,7 +29,12 @@ class PlayerController extends Controller
      */
     public function create()
     {
-        return view('pages/addPlayer');
+
+        $genre = Gender::all();
+        $role = Role::all();
+        $team = Team::all();
+
+        return view('pages/addPlayer', compact('genre', 'role', 'team',));
     }
 
     /**
@@ -60,9 +68,12 @@ class PlayerController extends Controller
         $store->country = $request->country;
         $store->photo_id = $storePhoto->id;
         $store->gender_id = $request->gender_id;
+        $store->role_id = $request->role_id;
+        $store->team_id = $request->team_id;
         
         $store->save();
-
+        
+        return redirect('/');
     }
 
     /**
@@ -71,9 +82,11 @@ class PlayerController extends Controller
      * @param  \App\Models\Player  $player
      * @return \Illuminate\Http\Response
      */
-    public function show(Player $player)
+    public function show($id)
     {
-        //
+        $show = Player::find($id);
+
+        return view('pages/show/showPlayer', compact('show'));
     }
 
     /**
