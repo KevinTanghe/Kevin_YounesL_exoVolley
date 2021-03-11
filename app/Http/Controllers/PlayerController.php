@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Photo;
 use App\Models\Player;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PlayerController extends Controller
 {
@@ -24,7 +26,7 @@ class PlayerController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages/addPlayer');
     }
 
     /**
@@ -35,7 +37,32 @@ class PlayerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validation = $request->validate([
+            'lastname' => "required",
+            'firstname' => "required",
+            'age' => "required",
+            'phone' => "required",
+            'mail' => "required",
+            'country' => "required"
+        ]);
+
+        $storePhoto = new Photo;
+        Storage::put('public', $request->file('url'));
+        $storePhoto->url = $request->file('url')->hashName();
+        $storePhoto->save();
+
+        $store = new Player;
+        $store->lastname = $request->lastname;
+        $store->firstname = $request->firstname;
+        $store->age = $request->age;
+        $store->phone = $request->phone;
+        $store->mail = $request->mail;
+        $store->country = $request->country;
+        $store->photo_id = $storePhoto->id;
+        $store->gender_id = $request->gender_id;
+        
+        $store->save();
+
     }
 
     /**
